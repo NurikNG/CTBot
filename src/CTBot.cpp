@@ -110,8 +110,20 @@ String CTBot::sendCommand(String command, String parameters)
 	curlyCounter = -1;
 	response = "";
 
-	while (telegramServer.connected()) {
-		while (telegramServer.available()) {
+	long counter = 0;
+	serialLog("\nBefore while\n");
+	while (telegramServer.connected()) { // somewhere here it freezes when internet connection failed in progress
+		counter++;
+		if (counter > 100000) {
+			serialLog("\nCounter while!!!\n");
+			return "";
+		}
+		while (telegramServer.available()) { // somewhere here it freezes when internet connection failed in progress
+			counter++;
+			if (counter > 100000) {
+				serialLog("\nCounter while!!!\n");
+				return "";
+			}
 			c = telegramServer.read();
 			response += (char)c;
 			if (c == '\\') {
